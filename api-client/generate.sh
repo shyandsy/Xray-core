@@ -29,12 +29,14 @@ mkdir -p "$API_CLIENT_DIR/generated/app/stats/command"
 mkdir -p "$API_CLIENT_DIR/generated/app/proxyman/command"
 mkdir -p "$API_CLIENT_DIR/generated/common/protocol"
 mkdir -p "$API_CLIENT_DIR/generated/common/serial"
+mkdir -p "$API_CLIENT_DIR/generated/core"
 
 # 在临时目录中创建相同的目录结构
 mkdir -p "$TEMP_GEN_DIR/app/stats/command"
 mkdir -p "$TEMP_GEN_DIR/app/proxyman/command"
 mkdir -p "$TEMP_GEN_DIR/common/protocol"
 mkdir -p "$TEMP_GEN_DIR/common/serial"
+mkdir -p "$TEMP_GEN_DIR/core"
 
 # 只生成需要的 proto 文件到临时目录
 echo "Generating only required proto files for api-client (using temp directory)..."
@@ -77,6 +79,14 @@ protoc \
     -I="$PROJECT_ROOT" \
     common/serial/typed_message.proto
 
+# 生成 core 包的 proto 文件（包含 InboundHandlerConfig 和 OutboundHandlerConfig）
+protoc \
+    --go_out="$TEMP_GEN_DIR" \
+    --go_opt=paths=source_relative \
+    --plugin=protoc-gen-go="$GOBIN/protoc-gen-go" \
+    -I="$PROJECT_ROOT" \
+    core/config.proto
+
 # 从临时目录复制到 api-client/generated
 echo "Copying generated gRPC code to api-client/generated..."
 cp "$TEMP_GEN_DIR/app/stats/command/command_grpc.pb.go" "$API_CLIENT_DIR/generated/app/stats/command/"
@@ -85,6 +95,7 @@ cp "$TEMP_GEN_DIR/app/proxyman/command/command_grpc.pb.go" "$API_CLIENT_DIR/gene
 cp "$TEMP_GEN_DIR/app/proxyman/command/command.pb.go" "$API_CLIENT_DIR/generated/app/proxyman/command/"
 cp "$TEMP_GEN_DIR/common/protocol/user.pb.go" "$API_CLIENT_DIR/generated/common/protocol/"
 cp "$TEMP_GEN_DIR/common/serial/typed_message.pb.go" "$API_CLIENT_DIR/generated/common/serial/"
+cp "$TEMP_GEN_DIR/core/config.pb.go" "$API_CLIENT_DIR/generated/core/"
 
 echo "Done! Generated files are in $API_CLIENT_DIR/generated/"
 

@@ -14,7 +14,8 @@ import (
 	statsService "github.com/xtls/xray-core/app/stats/command"
 
 	// 使用 generated 目录下的类型定义（不依赖主项目的实现代码）
-	serial "github.com/xtls/xray-core/api-client/generated/common/serial"
+	// 通过 replace 指令重定向到 generated 目录
+	serial "github.com/xtls/xray-core/common/serial"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -152,7 +153,7 @@ func demonstrateHandlerService(ctx context.Context, conn *grpc.ClientConn) {
 	// 示例 3: 展示如何添加用户（仅示例，不实际执行）
 	fmt.Println("\n3. Example: How to add a user")
 	fmt.Println("   To add a user, you would use:")
-	fmt.Println("   import protocol \"github.com/xtls/xray-core/api-client/generated/common/protocol\"")
+	fmt.Println("   import protocol \"github.com/shyandsy/proxy-api/generated/common/protocol\"")
 	fmt.Println("   user := &protocol.User{")
 	fmt.Println("       Email: \"test@example.com\",")
 	fmt.Println("       Level: 0,")

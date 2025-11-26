@@ -1,9 +1,13 @@
-module github.com/xtls/xray-core/api-client
+module github.com/shyandsy/proxy-api
 
 go 1.25
 
 require (
-	github.com/xtls/xray-core v0.0.0
+	github.com/xtls/xray-core/app/proxyman/command v0.0.0
+	github.com/xtls/xray-core/app/stats/command v0.0.0
+	github.com/xtls/xray-core/common/protocol v0.0.0
+	github.com/xtls/xray-core/common/serial v0.0.0
+	github.com/xtls/xray-core/core v0.0.0
 	google.golang.org/grpc v1.77.0
 	google.golang.org/protobuf v1.36.10
 )
@@ -31,14 +35,13 @@ require (
 	lukechampine.com/blake3 v1.4.1 // indirect
 )
 
-replace github.com/xtls/xray-core => ../
-
-// 使用 generated 目录下的 gRPC 客户端代码
+// 使用 generated 目录下的 gRPC 客户端代码（完全独立，不依赖主项目源代码）
 replace github.com/xtls/xray-core/app/stats/command => ./generated/app/stats/command
 
 replace github.com/xtls/xray-core/app/proxyman/command => ./generated/app/proxyman/command
 
-// 使用 generated 目录下的 common 类型（避免依赖主项目的实现代码）
 replace github.com/xtls/xray-core/common/protocol => ./generated/common/protocol
 
 replace github.com/xtls/xray-core/common/serial => ./generated/common/serial
+
+replace github.com/xtls/xray-core/core => ./generated/core
