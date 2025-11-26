@@ -11,7 +11,6 @@ require (
 require (
 	github.com/andybalholm/brotli v1.0.6 // indirect
 	github.com/cloudflare/circl v1.6.1 // indirect
-	github.com/dgryski/go-metro v0.0.0-20200812162917-85c65e2d0165 // indirect
 	github.com/juju/ratelimit v1.0.2 // indirect
 	github.com/klauspost/compress v1.17.4 // indirect
 	github.com/klauspost/cpuid/v2 v2.0.12 // indirect
@@ -19,10 +18,7 @@ require (
 	github.com/pires/go-proxyproto v0.8.1 // indirect
 	github.com/quic-go/quic-go v0.56.0 // indirect
 	github.com/refraction-networking/utls v1.8.1 // indirect
-	github.com/riobard/go-bloom v0.0.0-20200614022211-cdc8013cb5b3 // indirect
 	github.com/sagernet/sing v0.5.1 // indirect
-	github.com/seiflotfy/cuckoofilter v0.0.0-20240715131351-a2f2c23f1771 // indirect
-	github.com/v2fly/ss-bloomring v0.0.0-20210312155135-28617310f63e // indirect
 	github.com/xtls/reality v0.0.0-20251014195629-e4eec4520535 // indirect
 	golang.org/x/crypto v0.44.0 // indirect
 	golang.org/x/mod v0.29.0 // indirect
@@ -41,3 +37,8 @@ replace github.com/xtls/xray-core => ../
 replace github.com/xtls/xray-core/app/stats/command => ./generated/app/stats/command
 
 replace github.com/xtls/xray-core/app/proxyman/command => ./generated/app/proxyman/command
+
+// 使用 generated 目录下的 common 类型（避免依赖主项目的实现代码）
+replace github.com/xtls/xray-core/common/protocol => ./generated/common/protocol
+
+replace github.com/xtls/xray-core/common/serial => ./generated/common/serial

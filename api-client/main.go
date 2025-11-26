@@ -13,13 +13,12 @@ import (
 	handlerService "github.com/xtls/xray-core/app/proxyman/command"
 	statsService "github.com/xtls/xray-core/app/stats/command"
 
-	// 使用主项目的 common 包（包含 ToTypedMessage 等工具函数）
-	"github.com/xtls/xray-core/common/protocol"
-	"github.com/xtls/xray-core/common/serial"
-	"github.com/xtls/xray-core/common/uuid"
-	"github.com/xtls/xray-core/proxy/vmess"
+	// 使用 generated 目录下的类型定义（不依赖主项目的实现代码）
+	serial "github.com/xtls/xray-core/api-client/generated/common/serial"
+
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/protobuf/proto"
 )
 
 var (
@@ -150,13 +149,19 @@ func demonstrateHandlerService(ctx context.Context, conn *grpc.ClientConn) {
 		}
 	}
 
-	// 示例 3: 添加用户（需要有效的 inbound tag）
-	fmt.Println("\n3. Example: Adding a user (commented out to avoid errors)")
+	// 示例 3: 展示如何添加用户（仅示例，不实际执行）
+	fmt.Println("\n3. Example: How to add a user")
 	fmt.Println("   To add a user, you would use:")
+	fmt.Println("   import protocol \"github.com/xtls/xray-core/api-client/generated/common/protocol\"")
+	fmt.Println("   user := &protocol.User{")
+	fmt.Println("       Email: \"test@example.com\",")
+	fmt.Println("       Level: 0,")
+	fmt.Println("       Account: toTypedMessage(vmessAccount), // vmess account as TypedMessage")
+	fmt.Println("   }")
 	fmt.Println("   handlerClient.AlterInbound(ctx, &handlerService.AlterInboundRequest{")
 	fmt.Println("       Tag: \"your-inbound-tag\",")
-	fmt.Println("       Operation: serial.ToTypedMessage(&handlerService.AddUserOperation{")
-	fmt.Println("           User: createVMessUser(\"test@example.com\", \"your-uuid\"),")
+	fmt.Println("       Operation: toTypedMessage(&handlerService.AddUserOperation{")
+	fmt.Println("           User: user,")
 	fmt.Println("       }),")
 	fmt.Println("   })")
 
@@ -178,29 +183,25 @@ func demonstrateHandlerService(ctx context.Context, conn *grpc.ClientConn) {
 	}
 }
 
-// createVMessUser 创建一个 VMess 用户（示例函数）
-func createVMessUser(email, uuidStr string) *protocol.User {
-	// 解析 UUID
-	id, err := uuid.ParseString(uuidStr)
+// toTypedMessage 将 protobuf 消息转换为 TypedMessage
+// 这是 ToTypedMessage 的简化实现，不依赖主项目的代码
+func toTypedMessage(message proto.Message) *serial.TypedMessage {
+	if message == nil {
+		return nil
+	}
+
+	// 获取消息类型名称
+	messageType := string(message.ProtoReflect().Descriptor().FullName())
+
+	// 序列化消息
+	value, err := proto.Marshal(message)
 	if err != nil {
-		// 如果解析失败，生成新的 UUID
-		id = uuid.New()
+		log.Printf("Failed to marshal message: %v", err)
+		return nil
 	}
 
-	// 创建 VMess 账户
-	vmessAccount := &vmess.Account{
-		Id: id.String(),
-		SecuritySettings: &protocol.SecurityConfig{
-			Type: protocol.SecurityType_AUTO,
-		},
+	return &serial.TypedMessage{
+		Type:  messageType,
+		Value: value,
 	}
-
-	// 创建用户
-	user := &protocol.User{
-		Email:   email,
-		Level:   0,
-		Account: serial.ToTypedMessage(vmessAccount),
-	}
-
-	return user
 }
