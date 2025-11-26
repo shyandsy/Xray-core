@@ -12,11 +12,9 @@ import (
 	// 我们需要通过 replace 指令让 Go 找到 generated 目录下的代码
 	handlerService "github.com/xtls/xray-core/app/proxyman/command"
 	statsService "github.com/xtls/xray-core/app/stats/command"
-
 	// 使用 generated 目录下的类型定义（不依赖主项目的实现代码）
 	// 通过 replace 指令重定向到 generated 目录
 	serial "github.com/xtls/xray-core/common/serial"
-
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/protobuf/proto"

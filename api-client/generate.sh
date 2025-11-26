@@ -97,5 +97,22 @@ cp "$TEMP_GEN_DIR/common/protocol/user.pb.go" "$API_CLIENT_DIR/generated/common/
 cp "$TEMP_GEN_DIR/common/serial/typed_message.pb.go" "$API_CLIENT_DIR/generated/common/serial/"
 cp "$TEMP_GEN_DIR/core/config.pb.go" "$API_CLIENT_DIR/generated/core/"
 
+# 为每个 generated 包创建 go.mod 文件（Go 模块系统需要）
+echo "Creating go.mod files for generated packages..."
+echo "module github.com/xtls/xray-core/app/stats/command" > "$API_CLIENT_DIR/generated/app/stats/command/go.mod"
+echo "go 1.25" >> "$API_CLIENT_DIR/generated/app/stats/command/go.mod"
+
+echo "module github.com/xtls/xray-core/app/proxyman/command" > "$API_CLIENT_DIR/generated/app/proxyman/command/go.mod"
+echo "go 1.25" >> "$API_CLIENT_DIR/generated/app/proxyman/command/go.mod"
+
+echo "module github.com/xtls/xray-core/common/protocol" > "$API_CLIENT_DIR/generated/common/protocol/go.mod"
+echo "go 1.25" >> "$API_CLIENT_DIR/generated/common/protocol/go.mod"
+
+echo "module github.com/xtls/xray-core/common/serial" > "$API_CLIENT_DIR/generated/common/serial/go.mod"
+echo "go 1.25" >> "$API_CLIENT_DIR/generated/common/serial/go.mod"
+
+echo "module github.com/xtls/xray-core/core" > "$API_CLIENT_DIR/generated/core/go.mod"
+echo "go 1.25" >> "$API_CLIENT_DIR/generated/core/go.mod"
+
 echo "Done! Generated files are in $API_CLIENT_DIR/generated/"
 
